@@ -24,9 +24,9 @@ class Entry {
       let entries = [];
       items.forEach((item) => {
         entries.push(JSON.parse(item));
-      })
+      });
       cb(null, entries);
-    })
+    });
   }
 
 }

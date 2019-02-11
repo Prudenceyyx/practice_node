@@ -15,25 +15,20 @@ const register = require('./routes/register');
 const messages = require('./middleware/messages'); //after register because of session
 const login = require('./routes/login');
 const user = require('./middleware/user');
-
 const validate = require('./middleware/validate');
 
 var app = express();
-
-
 
 // view engine setup
 app.set('views', path.join(__dirname, '/views'));
 console.log(path.join(__dirname, '/views'));
 app.set('view engine', 'ejs');
-
-app.use(logger('dev')); //Output colored logs
+//Output colored logs
+app.use(logger('dev'));
+//Set body parser
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(express.json());
-// app.use(express.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true })); //true if body has entry[key]
 app.use(cookieParser());
-
 
 app.use(session({ // After cookie
   secret: 'secret',
@@ -44,33 +39,27 @@ app.use(express.static(path.join(__dirname, '/public'))); //Serves static files 
 app.use(user); // After static
 app.use(messages);
 
-
-// res.error =  msg => this.message(msg, 'error');
-
+if (app.get('env') === 'development') {
+  app.use(errorHandler());
+}
 
 // app.use('/', indexRouter); //Specifies app routes
 app.get('/', entries.list);
 app.use('/users', usersRouter);
 
-
-if (app.get('env') === 'development') {
-  app.use(errorHandler());
-}
-
-
-
-
+// Post entry
 app.get('/post', entries.form);
-// app.post('/post', entries.submit);
-app.post('/post',
+app.post('/post', // with validators
   validate.required('entry[title]'),
   validate.lengthAbove('entry[title]', 4),
-  entries.submit);
+  entries.submit
+);
 
-
+//Register user
 app.get('/register', register.form);
 app.post('/register', register.submit);
 
+//Login user
 app.get('/login', login.form);
 app.post('/login', login.submit);
 app.get('/logout', login.logout);

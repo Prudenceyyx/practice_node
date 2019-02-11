@@ -12,8 +12,8 @@ exports.submit = (req, res, next) => {
   User.authenticate(data.name, data.pass, (err, user) => {
     if (err) return next(err);
     if (user) {
-      res.locals.user = user;
-      req.session.uid = user.id;//Stpres uid for autentication
+      // res.locals.user = user;
+      req.session.uid = user.id;//Store uid for authentication
       res.redirect('/');
     } else {
       res.error('Sorry!invalid credentials.')

@@ -27,9 +27,14 @@ exports.list = (req, res, next) => {
     if (err) return next(err);
 
     res.render('entries', { //Renders HTTP response
-      title: 'Entreis',
+      title: 'Entries',
       entries: entries
     });
 
   });
+
 };
+
+
+
+
