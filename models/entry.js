@@ -29,6 +29,13 @@ class Entry {
     });
   }
 
+  static count(cb) {
+    Entry.getRange(0, -1, (err, entries) => {
+      if (err) return cb(err);
+      cb(null, entries.length);
+    })
+  }
+
 }
 
 module.exports = Entry;

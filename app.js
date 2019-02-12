@@ -17,6 +17,10 @@ const login = require('./routes/login');
 const user = require('./middleware/user');
 const validate = require('./middleware/validate');
 
+const api = require('./routes/api');
+const page = require('./middleware/page');
+const Entry = require('./models/entry');
+
 var app = express();
 
 // view engine setup
@@ -36,8 +40,10 @@ app.use(session({ // After cookie
   saveUninitialized: true
 }));
 app.use(express.static(path.join(__dirname, '/public'))); //Serves static files from ./public
+app.use('/api', api.auth); //Before user
 app.use(user); // After static
 app.use(messages);
+// app.use(page());
 
 if (app.get('env') === 'development') {
   app.use(errorHandler());
@@ -64,6 +70,14 @@ app.get('/login', login.form);
 app.post('/login', login.submit);
 app.get('/logout', login.logout);
 
+//APIs
+app.get('/api/user/:id', api.user);
+// test
+// $ curl http://ab:ab@127.0.0.1:3000/api/user/2 -v
+app.post('/api/entry', entries.submit);
+// $ curl -X POST -d "entry[title]='Ho ho ho'&entry[body]='Santa loves you'" http://ab:ab@127.0.0.1:3000/api/entry
+app.get('/api/entries/:page?', page(Entry.count), api.entries);
+// $ curl http://tobi:ferret@127.0.0.1:3000/api/entries?page=1
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
