@@ -78,6 +78,7 @@ app.post('/api/entry', entries.submit);
 // $ curl -X POST -d "entry[title]='Ho ho ho'&entry[body]='Santa loves you'" http://ab:ab@127.0.0.1:3000/api/entry
 app.get('/api/entries/:page?', page(Entry.count), api.entries);
 // $ curl http://tobi:ferret@127.0.0.1:3000/api/entries?page=1
+// curl -i -H 'Accept: application/xml' http://tobi:ferret@127.0.0.1:3000/api/entries
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

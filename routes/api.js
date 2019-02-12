@@ -24,6 +24,14 @@ exports.entries = (req, res, next) => {
   const page = req.page;
   Entry.getRange(page.from, page.to, (err, entries) => {
     if (err) return next(err);
-    res.json(entries);
+    // Implement content negotiation: responds differently based on Accept header value
+    res.format({
+      json: () => { //application/json response
+        res.json(entries);
+      },
+      xml: () => { //application/xml response
+        res.render('entries/xml', { entries: entries });
+      }
+    });
   })
 }
